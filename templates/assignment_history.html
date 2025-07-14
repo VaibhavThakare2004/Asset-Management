@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Assignment History - {{ asset_id }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        h1 { color: #333; }
+        .current { 
+            background: #f8f9fa; 
+            padding: 15px; 
+            margin-bottom: 20px; 
+            border-radius: 5px;
+            border-left: 4px solid #28a745;
+        }
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .history-table th, .history-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .history-table th {
+            background-color: #f2f2f2;
+        }
+        .history-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .download-btn {
+            display: inline-block;
+            background-color: #28a745;
+            color: white;
+            padding: 8px 16px;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Assignment History for {{ asset_id }}</h1>
+    
+    <a href="/admin/laptop/{{ asset_id }}/history/download" class="download-btn">
+        Download History as Excel
+    </a>
+    
+    {% if current_assignment %}
+    <div class="current">
+        <h3>Current Assignment</h3>
+        <p><strong>Assignee:</strong> {{ current_assignment.assigned_to }}</p>
+        <p><strong>Email:</strong> {{ current_assignment.email }}</p>
+        <p><strong>Assigned On:</strong> {{ current_assignment.assign_date }}</p>
+    </div>
+    {% endif %}
+    
+    <h3>Assignment History</h3>
+    {% if history %}
+    <table class="history-table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>From</th>
+                <th>To</th>
+                <th>Changed By</th>
+                <th>Reason</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in history %}
+            <tr>
+                <td>{{ record.change_date }}</td>
+                <td>
+                    {% if record.previous_assignee %}
+                        {{ record.previous_assignee }} ({{ record.previous_email }})
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+                <td>{{ record.new_assignee }} ({{ record.new_email }})</td>
+                <td>{{ record.changed_by }}</td>
+                <td>{{ record.reason or '-' }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No assignment history found for this asset.</p>
+    {% endif %}
+    
+    <a href="/admin/laptops/manage" class="back-link">← Back to Laptop Management</a>
+</body>
+</html>

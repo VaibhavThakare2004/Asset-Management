@@ -1,0 +1,204 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    padding: 30px;
+}
+
+.container {
+    background: white;
+    padding: 20px 30px;
+    border-radius: 8px;
+    max-width: 800px;
+    margin: auto;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+h2 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: left;
+    background-color: #f9f9f9;
+}
+
+th {
+    background-color: #e2e2e2;
+}
+
+a {
+    text-decoration: none;
+    color: #007bff;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+.timeline {
+  position: relative;
+  margin: 20px 0;
+  padding-left: 30px;
+  border-left: 3px solid #007bff;
+}
+
+.timeline-item {
+  margin-bottom: 25px;
+  position: relative;
+}
+
+.timeline-item::before {
+  content: "";
+  position: absolute;
+  left: -9px;
+  top: 4px;
+  width: 16px;
+  height: 16px;
+  background-color: #007bff;
+  border-radius: 50%;
+  border: 3px solid #fff;
+  box-shadow: 0 0 0 3px #007bff;
+}
+
+.timeline-content {
+  padding-left: 20px;
+}
+
+.timeline-content h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #007bff;
+}
+
+.timestamp {
+  color: #555;
+  font-size: 14px;
+  margin: 2px 0;
+}
+
+.comment {
+  font-size: 14px;
+  color: #333;
+}
+
+/* Hover effect for table rows */
+table tbody tr:hover {
+    background-color: #f0f8ff;
+    transition: background-color 0.3s ease;
+}
+
+/* Empty message styling */
+.empty-message {
+    margin-top: 20px;
+    color: #777;
+    font-style: italic;
+    text-align: center;
+}
+.status-flow {
+    margin-top: 20px;
+    padding-left: 20px;
+    position: relative;
+    border-left: 2px solid #ccc;
+}
+
+.status-step {
+    padding: 10px 0 10px 15px;
+    position: relative;
+}
+
+.status-step h3 {
+    margin: 0;
+    font-size: 16px;
+    color: #333;
+}
+
+.status-step .timestamp {
+    font-size: 14px;
+    color: #888;
+    margin-top: 4px;
+}
+
+.status-step::before {
+    content: "";
+    position: absolute;
+    left: -9px;
+    top: 8px;
+    width: 12px;
+    height: 12px;
+    background: #007bff;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 0 0 2px #007bff;
+}
+
+.down-arrow {
+    font-size: 20px;
+    color: #007bff;
+    margin-left: 5px;
+    padding-left: 5px;
+}
+.comment-form {
+  margin-top: 15px;
+}
+
+.comment-form textarea {
+  width: 100%;
+  padding: 8px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  resize: vertical;
+}
+
+.comment-form button {
+  margin-top: 8px;
+  background-color: #3477eb;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.comment-form button:hover {
+  background-color: #245fbb;
+}
+
+/* Timeline styling */
+.status-history {
+  margin-top: 20px;
+}
+
+.status-block {
+  border-left: 3px solid #888;
+  padding-left: 10px;
+  margin-bottom: 10px;
+}
+
+.status-line {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+}
+
+.comment-text {
+  margin-top: 4px;
+  padding-left: 5px;
+  font-style: italic;
+  color: #444;
+}
+
+/* Highlight user comments */
+.user-comment {
+  background-color: #f4f9ff;
+  border-left: 3px solid #3477eb;
+  padding: 8px 10px;
+  border-radius: 4px;
+}

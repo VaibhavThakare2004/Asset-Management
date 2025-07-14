@@ -1,0 +1,119 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin - Edit Ticket {{ ticket.ticket_id }}</title>
+    <link rel="stylesheet" href="/static/admin.css">
+    <style>
+        .delete-btn {
+            background-color: #ff4444;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 4px 8px;
+            margin-left: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        .delete-btn:hover {
+            background-color: #cc0000;
+        }
+
+        .delete-icon {
+            margin-right: 4px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            background: #f9f9f9;
+            margin-bottom: 8px;
+            padding: 10px;
+            border-radius: 4px;
+            border-left: 4px solid #4CAF50;
+        }
+
+        select, input[type="text"] {
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        button[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h2>Edit Ticket: {{ ticket.ticket_id }}</h2>
+
+    <p><strong>Description:</strong> {{ ticket.description }}</p>
+    <p><strong>Asset ID:</strong> {{ ticket.asset_id }}</p>
+    <p><strong>Make:</strong> {{ ticket.make }}</p>
+    <p><strong>Model:</strong> {{ ticket.model }}</p>
+    <p><strong>Serial Number:</strong> {{ ticket.serial_number }}</p>
+    <p><strong>Name:</strong> {{ ticket.name }}</p>
+    <p><strong>Time:</strong> {{ ticket.time.strftime("%Y-%m-%d %H:%M:%S") }}</p>
+
+    <h3>Status History</h3>
+    <ul>
+        {% for status in status_history %}
+        <li>
+            <strong>{{ status.status }}</strong> – {{ status.timestamp.strftime("%Y-%m-%d %H:%M:%S") }}
+            {% if status.comment %}
+                <br><em>{{ status.comment }}</em>
+            {% endif %}
+            <form method="post" action="/admin/ticket/{{ ticket.ticket_id }}/delete_status" style="display:inline;">
+                <input type="hidden" name="timestamp" value="{{ status.timestamp.isoformat() }}">
+                <button type="submit" class="delete-btn" onclick="return confirm('Delete this status?')">
+                    <span class="delete-icon">🗑️</span> Delete
+                </button>
+            </form>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <h3>Add New Status</h3>
+
+    {% if request.query_params.get('success') == '1' %}
+        <div style="color: green; font-weight: bold; margin-bottom: 20px;">
+            ✅ Status successfully added!
+        </div>
+    {% endif %}
+
+    <form method="post" action="/admin/ticket/{{ ticket.ticket_id }}/add_status">
+        <label>Status:</label>
+        <select name="status" required>
+            <option value="">-- Select --</option>
+            {% for s in statuses %}
+            <option value="{{ s }}">{{ s }}</option>
+            {% endfor %}
+        </select>
+
+        <label>Comment (optional):</label>
+        <input type="text" name="comment" placeholder="Add a comment">
+
+        <button type="submit">Update</button>
+    </form>
+
+    <br><br>
+    <a href="/admin/laptops">← Back to All Assets</a>
+</body>
+</html>

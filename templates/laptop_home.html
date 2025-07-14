@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ laptop.asset_id }} - Asset Portal</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 30px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #007BFF;
+            margin-bottom: 30px;
+        }
+        .button {
+            display: inline-block;
+            margin: 10px 10px 0 0;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .ticket {
+            background: #fff;
+            margin-bottom: 20px;
+            padding: 20px;
+            border-left: 5px solid #007BFF;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .ticket h3 {
+            margin-top: 0;
+            color: #007BFF;
+        }
+        .status-history {
+            margin-top: 10px;
+            padding-left: 10px;
+            border-left: 3px solid #ccc;
+        }
+        .status-item {
+            margin-bottom: 10px;
+        }
+        .status-item h4 {
+            margin: 0;
+            color: #28a745;
+        }
+        .timestamp {
+            font-size: 0.9em;
+            color: #666;
+        }
+        .comment {
+            font-style: italic;
+            color: #444;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>💻 Asset Support Portal</h2>
+        <p><strong>Asset ID:</strong> {{ laptop.asset_id }}</p>
+        <p><strong>Make:</strong> {{ laptop.make }}</p>
+        <p><strong>Model:</strong> {{ laptop.model }}</p>
+        <p><strong>Serial No:</strong> {{ laptop.serial_number }}</p>
+
+        <a href="/create-ticket/{{ laptop.asset_id }}" class="button">➕ Create Ticket</a>
+    </div>
+
+    <style>
+        h1 {
+            color: #333;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+            background-color: white;
+        }
+        th, td {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #008CBA;
+            color: white;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        .empty-message {
+            margin-top: 20px;
+            color: #555;
+            font-style: italic;
+        }
+    </style>
+
+    <h2>📋 Ticket History</h2>
+    <h1>Tickets for Asset: {{ asset_id }}</h1>
+
+    {% if tickets %}
+    <table>
+        <tr>
+            <th>Ticket ID</th>
+            <th>Description</th>
+            <th>Time</th>
+            <th>Action</th>
+        </tr>
+        {% for ticket in tickets %}
+        <tr>
+            <td>{{ ticket.ticket_id }}</td>
+            <td>{{ ticket.description }}</td>
+            <td>
+                {% if ticket.time %}
+                    {{ ticket.time.strftime('%d-%m-%Y %H:%M') }}
+                {% else %}
+                    N/A
+                {% endif %}
+            </td>
+            <td><a href="/ticket/{{ ticket.ticket_id }}?redirect={{ laptop.asset_id }}">View</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+        <p class="empty-message">No tickets found for this asset.</p>
+    {% endif %}
+</body>
+</html>

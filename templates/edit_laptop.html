@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Laptop - {{ laptop.asset_id }}</title>
+    <style>
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f9f9f9;
+            padding: 40px;
+            color: #333;
+        }
+
+        h2 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        p.center {
+            text-align: center;
+            font-weight: bold;
+            color: #555;
+        }
+
+        form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            width: 200px;
+        }
+
+        .form-group label {
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #444;
+        }
+
+        .form-group input, .form-group select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        form button {
+            padding: 12px 25px;
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        form button:hover {
+            background-color: #1e8449;
+        }
+
+        hr {
+            margin: 40px 0;
+            border: 0;
+            height: 1px;
+            background-color: #ddd;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 30px;
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Edit Laptop - {{ laptop.asset_id }}</h2>
+
+{% if laptop.assigned_to %}
+    <p class="center">Currently Assigned To: {{ laptop.assigned_to }} ({{ laptop.email }})</p>
+{% else %}
+    <p class="center">No active assignment for this laptop.</p>
+{% endif %}
+
+<!-- 🔧 Main Laptop Edit Form -->
+<form method="post" action="/admin/laptops/update/{{ laptop.asset_id }}">
+    <input type="hidden" name="asset_id" value="{{ laptop.asset_id }}">
+
+    <!-- Basic Information -->
+    <div class="form-group">
+        <label>Serial Number*</label>
+        <input type="text" name="serial_number" value="{{ laptop.serial_number }}" required>
+    </div>
+    <div class="form-group">
+        <label>Make*</label>
+        <input type="text" name="make" value="{{ laptop.make }}" required>
+    </div>
+    <div class="form-group">
+        <label>Model*</label>
+        <input type="text" name="model" value="{{ laptop.model }}" required>
+    </div>
+
+    <!-- Assignment Information -->
+    <div class="form-group">
+        <label>Assigned To*</label>
+        <input type="text" name="assigned_to" value="{{ laptop.assigned_to or '' }}" required>
+    </div>
+    <div class="form-group">
+        <label>Email*</label>
+        <input type="email" name="email" value="{{ laptop.email or '' }}" required>
+    </div>
+    <div class="form-group">
+        <label>Assign Date*</label>
+        <input type="date" name="assign_date" value="{{ laptop.assign_date.strftime('%Y-%m-%d') if laptop.assign_date else '' }}" required>
+    </div>
+    <div class="form-group">
+        <label>Purchase Date</label>
+        <input type="date" name="purchase_date" value="{{ laptop.purchase_date.strftime('%Y-%m-%d') if laptop.purchase_date else '' }}">
+    </div>
+
+    <!-- Hardware Details -->
+    <div class="form-group">
+        <label>Invoice No</label>
+        <input type="text" name="invoice_no" value="{{ laptop.invoice_no or '' }}">
+    </div>
+    <div class="form-group">
+        <label>Cost</label>
+        <input type="text" name="cost" value="{{ laptop.cost or '' }}">
+    </div>
+    <div class="form-group">
+        <label>Vendor</label>
+        <input type="text" name="vendor" value="{{ laptop.vendor or '' }}">
+    </div>
+    <div class="form-group">
+        <label>Charger</label>
+        <input type="text" name="charger" value="{{ laptop.charger or '' }}">
+    </div>
+    <div class="form-group">
+        <label>Processor</label>
+        <input type="text" name="processor" value="{{ laptop.processor or '' }}">
+    </div>
+    <div class="form-group">
+        <label>Graphics</label>
+        <input type="text" name="graphics" value="{{ laptop.graphics or '' }}">
+    </div>
+    <div class="form-group">
+        <label>GPU</label>
+        <input type="text" name="gpu" value="{{ laptop.gpu or '' }}">
+    </div>
+    <div class="form-group">
+        <label>RAM</label>
+        <input type="text" name="ram" value="{{ laptop.ram or '' }}">
+    </div>
+    <div class="form-group">
+        <label>Disk</label>
+        <input type="text" name="disk" value="{{ laptop.disk or '' }}">
+    </div>
+    <div class="form-group">
+        <label>Part Replaced</label>
+        <input type="text" name="part_replaced" value="{{ laptop.part_replaced or '' }}">
+    </div>
+    <div class="form-group">
+        <label>Part Replacement Date</label>
+        <input type="date" name="part_replacement_date" value="{{ laptop.part_replacement_date.strftime('%Y-%m-%d') if laptop.part_replacement_date else '' }}">
+    </div>
+
+    <button type="submit" style="width: 100%; max-width: 430px;">Update Laptop Details</button>
+</form>
+
+<hr>
+
+<!-- 👤 Reassignment Form -->
+<h2>Reassign Laptop</h2>
+<form method="post" action="/admin/laptops/reassign">
+    <input type="hidden" name="asset_id" value="{{ laptop.asset_id }}">
+
+    <div class="form-group">
+        <label>New Assignee*</label>
+        <input type="text" name="assigned_to" required>
+    </div>
+    <div class="form-group">
+        <label>New Email*</label>
+        <input type="email" name="email" required>
+    </div>
+    <div class="form-group" style="width: 430px;">
+        <label>Reason for Reassignment</label>
+        <input type="text" name="reason" placeholder="Optional reason for reassignment">
+    </div>
+
+    <button type="submit" style="background-color: #e67e22; width: 100%; max-width: 430px;">Reassign Laptop</button>
+</form>
+
+<a href="/admin/laptops/manage" class="back-link">← Back to Laptop Management</a>
+
+</body>
+</html>

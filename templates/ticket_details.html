@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ticket Details</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        .comment-form {
+            margin-top: 20px;
+        }
+
+        .comment-form textarea {
+            width: 100%;
+            padding: 8px;
+            font-size: 14px;
+            resize: vertical;
+        }
+
+        .comment-form button {
+            margin-top: 10px;
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .user-comment {
+            background-color: #f1f8ff;
+            border-left: 4px solid #0078D4;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+
+        .timeline {
+            border-left: 3px solid #ccc;
+            margin-left: 20px;
+            padding-left: 20px;
+        }
+
+        .timeline-item {
+            margin-bottom: 20px;
+        }
+
+        .timeline-content {
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 6px;
+        }
+
+        .comment {
+            margin-top: 8px;
+            font-style: italic;
+        }
+
+        .timestamp {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #0078D4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Ticket ID: {{ ticket.ticket_id }}</h2>
+
+        <div class="ticket-info">
+            <p><strong>Description:</strong> {{ ticket.description }}</p>
+            <p><strong>Time:</strong> {{ ticket.time }}</p>
+            <p><strong>Asset ID:</strong> {{ ticket.asset_id }}</p>
+            <p><strong>Make:</strong> {{ ticket.make }}</p>
+            <p><strong>Model:</strong> {{ ticket.model }}</p>
+            <p><strong>Serial Number:</strong> {{ ticket.serial_number }}</p>
+        </div>
+
+        <h2>Status History</h2>
+        <div class="timeline">
+            {% for status in status_history %}
+            <div class="timeline-item {% if 'User Comment' in status.status %}user-comment{% endif %}">
+                <div class="timeline-content">
+                    <h3>{{ status.status }}</h3>
+                    <div class="timestamp">{{ status.timestamp.strftime("%Y-%m-%d %H:%M:%S") }}</div>
+                    {% if status.comment %}
+                        <div class="comment">📝 {{ status.comment }}</div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <hr>
+        <h3>✏️ Add Comment</h3>
+        <form action="/ticket/{{ ticket.ticket_id }}/add_comment" method="post" class="comment-form">
+            <textarea name="comment" rows="4" placeholder="Write your comment here..." required></textarea>
+            <br>
+            <button type="submit">💬 Submit Comment</button>
+        </form>
+
+        <a href="/{{ redirect or ticket.asset_id }}" class="back-btn">← Back to Dashboard</a>
+    </div>
+</body>
+</html>

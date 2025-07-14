@@ -1,0 +1,259 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin - Asset Dashboard</title>
+    <link rel="stylesheet" href="/static/admin.css">
+    <style>
+        .header-nav {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .nav-btn {
+            background: green;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 16px;
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: 2px solid greenyellow;
+            transition: all 0.3s ease;
+        }
+        .nav-btn:hover {
+            background: white;
+            color: #007BFF;
+            text-decoration: none;
+        }
+        .summary-section {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        .summary-card {
+            background: #fff;
+            border: 2px solid #007BFF;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        }
+        .summary-card h3 {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .summary-card p {
+            font-size: 24px;
+            color: #007BFF;
+            font-weight: bold;
+        }
+        .section-box {
+            background:#fff;
+            border: 1px solid #007BFF;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        .section-title {
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table thead {
+            background: #007BFF;
+            color: blue;
+        }
+        table th, table td {
+            padding: 10px;
+            border: 1px solid white;
+            text-align: center;
+        }
+        table tbody tr:nth-child(odd) {
+            background-color:#f9f9f9;
+        }
+        table tbody tr:nth-child(even) {
+            background-color: #ffffff;
+        }
+        table tbody tr:hover {
+            background-color: #e6f0ff;
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            background: #007BFF;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .action-btn:hover {
+            background: #0056b3;
+        }
+        .export-btn {
+            background: #28a745;
+            padding: 8px 16px;
+            font-size: 14px;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            float: right;
+        }
+        .export-btn:hover {
+            background: #218838;
+        }
+
+        .badge-open {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .badge-closed {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .badge-other {
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- Navigation buttons in boxes -->
+    <div class="header-nav">
+        <a href="/admin/laptops" class="nav-btn">Admin Dashboard</a>
+        <a href="/admin/laptops/manage" class="nav-btn">Manage Portal</a>
+    </div>
+    
+    <h2>📊 Admin - Asset Dashboard</h2>
+
+    <div class="summary-section">
+        <div class="summary-card">
+            <h3>Total Tickets Raised</h3>
+            <p id="total-tickets">{{ total_tickets }}</p>
+        </div>
+        <div class="summary-card">
+            <h3>Total Open Tickets</h3>
+            <p id="open-tickets">{{ open_tickets }}</p>
+        </div>
+        <div class="summary-card">
+            <h3>Total Closed Tickets</h3>
+            <p id="closed-tickets">{{ closed_tickets }}</p>
+        </div>
+       <div class="summary-card">
+            <h3>Total Assets</h3>
+            <p id="total-assets">{{ assets | length }}</p>  
+        </div>
+    </div>
+
+    <div class="section-box">
+        <div class="section-title">
+            ⏰ Recent Tickets
+            <a href="/admin/tickets/download_csv" class="export-btn">
+                Export All Tickets
+            </a>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Ticket ID</th>
+                    <th>Description</th>
+                    <th>Asset ID</th>
+                    <th>Status</th>
+                    <th>Time</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ticket in recent_tickets %}
+                <tr>
+                    <td>{{ ticket.ticket_id }}</td>
+                    <td>{{ ticket.description }}</td>
+                    <td>{{ ticket.asset_id }}</td>
+                    <td>
+                        <span class="
+                            {% if ticket.status == 'Open' %}
+                                badge-open
+                            {% elif ticket.status == 'Closed' %}
+                                badge-closed
+                            {% else %}
+                                badge-other
+                            {% endif %}
+                        ">
+                            {{ ticket.status }}
+                        </span>
+                    </td>
+                    <td>{{ ticket.time.strftime("%Y-%m-%d %H:%M:%S") }}</td>
+                    <td><a class="action-btn" href="/admin/ticket/{{ ticket.ticket_id }}">View</a></td>
+                </tr>
+                {% endfor %}
+                {% if recent_tickets|length == 0 %}
+                <tr>
+                    <td colspan="6" style="text-align: center;">No recent tickets found.</td>
+                </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section-box">
+        <div class="section-title">🟡 Tickets Without Open/Closed Status</div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Ticket ID</th>
+                    <th>Description</th>
+                    <th>Asset ID</th>
+                    <th>Time</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ticket in neutral_tickets %}
+                <tr>
+                    <td>{{ ticket.ticket_id }}</td>
+                    <td>{{ ticket.description }}</td>
+                    <td>{{ ticket.asset_id }}</td>
+                    <td>{{ ticket.time.strftime("%Y-%m-%d %H:%M:%S") }}</td>
+                    <td><a class="action-btn" href="/admin/ticket/{{ ticket.ticket_id }}">View</a></td>
+                </tr>
+                {% endfor %}
+                {% if neutral_tickets|length == 0 %}
+                <tr>
+                    <td colspan="5" style="text-align: center;">No such tickets found.</td>
+                </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+function refreshCounts() {
+    fetch('/admin/ticket_counts')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('total-tickets').textContent = data.total;
+            document.getElementById('open-tickets').textContent = data.open;
+            document.getElementById('closed-tickets').textContent = data.closed;
+            document.getElementById('total-assets').textContent = data.total_assets;
+        });
+}
+
+setInterval(refreshCounts, 30000); // 30 seconds
+</script>
+</body>
+</html>

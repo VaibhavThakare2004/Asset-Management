@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Laptop Management</title>
+    <style>
+        .header-nav {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .nav-btn {
+            background: #007BFF;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 16px;
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: 2px solid #007BFF;
+            transition: all 0.3s ease;
+        }
+        .nav-btn:hover {
+            background: white;
+            color: #007BFF;
+            text-decoration: none;
+        }
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f6f8;
+            padding: 40px;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            color: #1e2e4f;
+            margin-bottom: 20px; /* Reduced from 40px to accommodate nav buttons */
+            font-size: 32px;
+        }
+
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        .section {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+            margin-bottom: 40px;
+        }
+
+        form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            width: 200px;
+        }
+
+        .form-group label {
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #444;
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        form button {
+            padding: 12px 25px;
+            background-color: #2e86de;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        form button:hover {
+            background-color: #1e60b0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        table th, table td {
+            text-align: left;
+            padding: 12px 16px;
+            border-bottom: 1px solid #eee;
+        }
+
+        table th {
+            background-color: #f1f3f5;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        table tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        table form {
+            display: inline;
+        }
+
+        table button {
+            padding: 6px 12px;
+            font-size: 12px;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        table button:hover {
+            background-color: #c0392b;
+        }
+
+        .edit-btn {
+            background-color: #2980b9;
+        }
+
+        .edit-btn:hover {
+            background-color: #21618c;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation buttons in boxes -->
+    <div class="header-nav">
+        <a href="/admin/laptops" class="nav-btn">Admin Dashboard</a>
+        <a href="/admin/laptops/manage" class="nav-btn">Manage Portal</a>
+    </div>
+
+    <h1>Laptop Management Dashboard</h1>
+
+    <!-- 🔍 Search Section -->
+    <div class="section" id="search-results">
+        <h2>🔍 Search Laptops</h2>
+        <form method="get" action="/admin/laptops/manage#search-results">
+            <div class="form-group">
+                <label for="filter_by">Filter By</label>
+                <select name="filter_by">
+                    <option value="asset_id" {% if filter_by == "asset_id" %}selected{% endif %}>Asset ID</option>
+                    <option value="serial_number" {% if filter_by == "serial_number" %}selected{% endif %}>Serial Number</option>
+                    <option value="make" {% if filter_by == "make" %}selected{% endif %}>Make</option>
+                    <option value="model" {% if filter_by == "model" %}selected{% endif %}>Model</option>
+                    <option value="email" {% if filter_by == "email" %}selected{% endif %}>Email</option>
+                    <option value="assigned_to" {% if filter_by == "assigned_to" %}selected{% endif %}>Assigned To</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="query">Search</label>
+                <input type="text" name="query" value="{{ query or '' }}" placeholder="Enter value">
+            </div>
+            <div class="form-group" style="flex-direction: row; align-items: end;">
+                <button type="submit" style="background-color: #27ae60;">Search</button>
+                <a href="/admin/laptops/manage">
+                    <button type="button" style="margin-left: 10px; background-color: #7f8c8d;">Reset</button>
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <!-- 📋 Laptop List - moved up -->
+    <h2>📋 Laptop List
+        <a href="/admin/laptops/download_csv" style="margin-left: 50px;">
+            <button type="button" style="background-color: #16a085; padding: 14px 30px; font-size: 16px; border-radius: 8px;">
+                ⬇️ Download CSV
+            </button>
+        </a>
+
+        <a href="/admin/laptops/qr_all" style="margin-left: 20px;">
+            <button type="button" style="background-color: #8e44ad; padding: 14px 30px; font-size: 16px; border-radius: 8px;">
+                📦 Download All QRs
+            </button>
+        </a>
+    </h2>
+
+    <table>
+        <tr>
+            <th>Asset ID</th>
+            <th>Serial Number</th>
+            <th>Make</th>
+            <th>Model</th>
+            <th>Email</th>
+            <th>Assigned To</th>
+            <th>Assign Date</th>
+            <th>Purchase Date</th>
+            <th>Action</th>
+        </tr>
+        {% for laptop in laptops %}
+        <tr>
+            <td>{{ laptop.asset_id }}</td>
+            <td>{{ laptop.serial_number }}</td>
+            <td>{{ laptop.make }}</td>
+            <td>{{ laptop.model }}</td>
+            <td>{{ laptop.email }}</td>
+            <td>{{ laptop.assigned_to }}</td>
+            <td>{{ laptop.assign_date }}</td>
+            <td>{{ laptop.purchase_date }}</td>
+            <td>
+                <form method="post" action="/admin/laptops/delete" style="display:inline">
+                    <input type="hidden" name="asset_id" value="{{ laptop.asset_id }}">
+                    <button type="submit">Delete</button>
+                </form>
+                <form method="get" action="/admin/laptops/edit/{{ laptop.asset_id }}" style="display:inline">
+                    <button type="submit" class="edit-btn">Edit</button>
+                </form>
+                <form method="get" action="/admin/laptops/qr/{{ laptop.asset_id }}" style="display:inline">
+                    <button type="submit" style="background-color:#2ecc71;">QR</button>
+                </form>
+                <form method="get" action="/admin/laptop/{{ laptop.asset_id }}/history" style="display:inline">
+                    <button type="submit" style="background-color:#f39c12;">View History</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <!-- ➕ Add New Laptop - moved down -->
+    <div class="section">
+        <h2>➕ Add New Laptop</h2>
+        <form method="post" action="/admin/laptops/add">
+            <div class="form-group"><label>Asset ID</label><input type="text" name="asset_id" required></div>
+            <div class="form-group"><label>Serial Number</label><input type="text" name="serial_number" required></div>
+            <div class="form-group"><label>Make</label><input type="text" name="make" required></div>
+            <div class="form-group"><label>Model</label><input type="text" name="model" required></div>
+            <div class="form-group"><label>Email</label><input type="email" name="email" required></div>
+            <div class="form-group"><label>Assigned To</label><input type="text" name="assigned_to" required></div>
+            <div class="form-group"><label>Assign Date</label><input type="date" name="assign_date" required></div>
+            <div class="form-group"><label>Purchase Date</label><input type="date" name="purchase_date" required></div>
+            <div class="form-group"><label>Invoice No</label><input type="text" name="invoice_no"></div>
+            <div class="form-group"><label>Cost</label><input type="text" name="cost"></div>
+            <div class="form-group"><label>Vendor</label><input type="text" name="vendor"></div>
+            <div class="form-group"><label>Charger</label><input type="text" name="charger"></div>
+            <div class="form-group"><label>Processor</label><input type="text" name="processor"></div>
+            <div class="form-group"><label>Graphics</label><input type="text" name="graphics"></div>
+            <div class="form-group"><label>GPU</label><input type="text" name="gpu"></div>
+            <div class="form-group"><label>RAM</label><input type="text" name="ram"></div>
+            <div class="form-group"><label>Disk</label><input type="text" name="disk"></div>
+            <div class="form-group"><label>Part Replaced</label><input type="text" name="part_replaced"></div>
+            <div class="form-group"><label>Part Replacement Date</label><input type="date" name="part_replacement_date"></div>
+            <button type="submit">Add Laptop</button>
+        </form>
+    </div>
+</body>
+</html>

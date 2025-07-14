@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Ticket</title>
+    <link rel="stylesheet" href="/static/admin.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 30px;
+            background-color: #f4f4f4;
+        }
+        .form-box {
+            max-width: 600px;
+            margin: auto;
+            background: #fff;
+            border: 2px solid #007BFF;
+            padding: 25px;
+            border-radius: 10px;
+        }
+        h2 {
+            text-align: center;
+            color: #007BFF;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 15px;
+        }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        button {
+            margin-top: 20px;
+            width: 100%;
+            padding: 10px;
+            background: #007BFF;
+            color: white;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-box">
+        <h2>🎫 Generate Ticket</h2>
+        <form method="post" action="/submit-ticket">
+            <input type="hidden" name="asset_id" value="{{ asset_id }}">
+            <input type="hidden" name="make" value="{{ make }}">
+            <input type="hidden" name="model" value="{{ model }}">
+            <input type="hidden" name="serial_number" value="{{ serial_number }}">
+
+            <label>Your Name :</label>
+            <input type="text" name="name" required>
+
+            <label>Issue Description:</label>
+            <textarea name="description" rows="5" required></textarea>
+
+            <button type="submit">Submit Ticket</button>
+        </form>
+    </div>
+</body>
+</html>

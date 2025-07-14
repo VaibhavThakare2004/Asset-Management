@@ -1,0 +1,15 @@
+fastapi
+uvicorn
+sqlalchemy
+jinja2
+python-dotenv
+requests
+msal
+python-multipart
+psycopg2-binary
+itsdangerous
+starlette
+email-validator
+qrcode pillow
+pandas
+openpyxl     
